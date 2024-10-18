@@ -1,0 +1,135 @@
+[
+    {
+        "table_name": "glue.lms.lms_loan_account_info",
+        "table_usages": [
+            "Use for checking loan information by user_id.",
+            "Check the MAX(loan_id) per each user_id always. That is the recent record for each user_id."
+        ],
+        "columns": [
+            {"name": "account_id", "type": "BIGINT", "comment": "계좌id"},
+            {"name": "loan_id", "type": "BIGINT", "comment": "대출관리 id"},
+            {"name": "user_id", "type": "BIGINT", "comment": "사용자 id"},
+            {"name": "org_code", "type": "STRING", "comment": "기관 코드"},
+            {"name": "org_name", "type": "STRING", "comment": "기관 이름"},
+            {"name": "prod_name", "type": "STRING", "comment": "상품명"},
+            {"name": "account_type", "type": "STRING", "comment": "대출계좌 구분"},
+            {"name": "account_num", "type": "STRING", "comment": "암호화된 대출계좌번호"},
+            {"name": "contract_date", "type": "STRING", "comment": "약정일"},
+            {"name": "contract_amt", "type": "BIGINT", "comment": "약정금액"},
+            {"name": "balance_amt", "type": "BIGINT", "comment": "대출잔액"},
+            {"name": "int_rate", "type": "DECIMAL(7,5)"},
+            {"name": "int_amt", "type": "INT"},
+            {"name": "exp_date", "type": "STRING"},
+            {"name": "repay_method", "type": "STRING"},
+            {"name": "repay_org_code", "type": "STRING"},
+            {"name": "repay_org_name", "type": "STRING"},
+            {"name": "repay_account_num", "type": "STRING"},
+            {"name": "unredeemed_period", "type": "INT"},
+            {"name": "repay_rate", "type": "DECIMAL(18,5)"},
+            {"name": "repay_day", "type": "INT"},
+            {"name": "overdue_yn", "type": "INT"},
+            {"name": "next_repay_date", "type": "STRING"},
+            {"name": "next_repay_amt", "type": "BIGINT"},
+            {"name": "next_repay_principal_amt", "type": "BIGINT"},
+            {"name": "next_int_amt", "type": "INT"},
+            {"name": "latest_repay_amt", "type": "BIGINT"},
+            {"name": "latest_repay_principal_amt", "type": "BIGINT"},
+            {"name": "latest_int_amt", "type": "INT"},
+            {"name": "org_logo", "type": "STRING"},
+            {"name": "alias", "type": "STRING"},
+            {"name": "show_yn", "type": "INT"},
+            {"name": "insert_time", "type": "TIMESTAMP"},
+            {"name": "update_time", "type": "TIMESTAMP"},
+            {"name": "insert_operator", "type": "STRING"},
+            {"name": "update_operator", "type": "STRING"},
+            {"name": "date_cd", "type": "STRING"},
+            {"name": "unredeemed_start", "type": "INT", "comment": "거치 시작2. 거치기간 시작연월"},
+            {"name": "unredeemed_end", "type": "INT", "comment": "거치 종료. 거치기간 종료연월"}
+        ],
+        "partitions": ["date_cd"]
+    },
+    {
+        "table_name": "glue.lms.lms_info",
+        "table_usages": [
+            "Use for getting the recent 'loan_id' per each 'user_id' like 'MAX(loan_id)'."
+        ],
+        "columns": [
+            {"name": "loan_id", "type": "BIGINT", "comment": "대출관리 id"},
+            {"name": "user_id", "type": "BIGINT", "comment": "사용자 id"},
+            {"name": "source", "type": "STRING", "comment": "대출관리정보 소스"},
+            {"name": "source_table_id", "type": "BIGINT", "comment": "소스테이블 ID"},
+            {"name": "mydata_session", "type": "STRING", "comment": "마이데이터 연동세션ID"},
+            {"name": "sort_order_code", "type": "STRING", "comment": "계좌순서정렬 기준코드"},
+            {"name": "card_sort_order", "type": "STRING", "comment": "카드 정렬 순서"},
+            {"name": "insert_time", "type": "TIMESTAMP", "comment": "등록일자"},
+            {"name": "update_time", "type": "TIMESTAMP", "comment": "변경일자"},
+            {"name": "date_cd", "type": "STRING"}
+        ],
+        "partitions": ["date_cd"]
+    },
+    {
+        "table_name": "glue.cms.cms_card_bill_info",
+        "columns": [
+            {"name": "id", "type": "BIGINT", "comment": "아이디. id"},
+            {"name": "insert_time", "type": "TIMESTAMP", "comment": "등록 일자"},
+            {"name": "insert_operator", "type": "STRING", "comment": "등록자"},
+            {"name": "update_time", "type": "TIMESTAMP", "comment": "수정 일자"},
+            {"name": "update_operator", "type": "STRING", "comment": "수정자"},
+            {"name": "org_code", "type": "STRING", "comment": "기관 코드"},
+            {"name": "org_name", "type": "STRING", "comment": "기관 이름"},
+            {"name": "user_id", "type": "BIGINT", "comment": "유저 아이디"},
+            {"name": "sequence_no", "type": "STRING", "comment": "결제 순번 번호"},
+            {"name": "bill_amt", "type": "BIGINT", "comment": "청구 금액"},
+            {"name": "bill_day", "type": "STRING", "comment": "청구 결제일"},
+            {"name": "bill_month", "type": "INT", "comment": "청구서 기준월(yyyyMM)"},
+            {"name": "bill_date", "type": "STRING", "comment": "청구 일자(yyyyMMdd)"},
+            {"name": "bill_time", "type": "TIMESTAMP", "comment": "청구 일자를 datetime 으로 저장"},
+            {"name": "date_cd", "type": "STRING"},
+            {"name": "repay_status", "type": "STRING", "comment": "상환 상태. 출금상태(REPAYMENT_COMPLETE : 출금완료, REPAYMENT_CHECK_REQUIRED : 출금확인필요)"}
+        ],
+        "partitions": ["date_cd"]
+    },
+    {
+        "table_name": "glue.mydata_v2.mydata_consent_info",
+        "columns": [
+            {"name": "user_id", "type": "BIGINT", "comment": "사용자id"},
+            {"name": "org_code", "type": "STRING", "comment": "기관코드"},
+            {"name": "auth_seq", "type": "STRING", "comment": "전송요구 차수"},
+            {"name": "is_scheduled", "type": "INT", "comment": "정기적전송여부"},
+            {"name": "fnd_cycle", "type": "STRING", "comment": "기본정보 전송주기"},
+            {"name": "add_cycle", "type": "STRING", "comment": "추가정보 전송주기"},
+            {"name": "end_date", "type": "STRING", "comment": "종료시점"},
+            {"name": "purpose", "type": "STRING", "comment": "목적"},
+            {"name": "period", "type": "STRING", "comment": "보유기간"},
+            {"name": "scope", "type": "STRING", "comment": "전송요구 범위"},
+            {"name": "is_consent_trans_memo", "type": "INT", "comment": "적요/거래메모 전송요구여부"},
+            {"name": "is_consent_merchant_name_reqno", "type": "INT", "comment": "가맹점명/사업자등록번호 전송요구여부"},
+            {"name": "is_consent_trans_category", "type": "INT", "comment": "상품(구매)분류 전송요구여부"},
+            {"name": "update_time", "type": "TIMESTAMP", "comment": "변경일시"},
+            {"name": "insert_time", "type": "TIMESTAMP", "comment": "등록일시"},
+            {"name": "date_cd", "type": "STRING"}
+        ],
+        "partitions": ["date_cd"]
+    },
+    {
+        "table_name": "glue.fcsdb.user_activity_history",
+        "columns": [
+            {"name": "id", "type": "BIGINT"},
+            {"name": "insert_time", "type": "TIMESTAMP"},
+            {"name": "request_id", "type": "STRING", "comment": "request_id"},
+            {"name": "user_id", "type": "BIGINT", "comment": "user_id"},
+            {"name": "group_id", "type": "STRING", "comment": "group_id"},
+            {"name": "device_id", "type": "STRING", "comment": "device_id"},
+            {"name": "device_ip", "type": "STRING", "comment": "device_ip"},
+            {"name": "device_os_type", "type": "STRING", "comment": "device_os_type"},
+            {"name": "app_version", "type": "STRING", "comment": "app_version"},
+            {"name": "activity", "type": "STRING", "comment": "활동항목"},
+            {"name": "p1", "type": "STRING", "comment": "파리미터1"},
+            {"name": "p2", "type": "STRING", "comment": "파리미터2"},
+            {"name": "p3", "type": "STRING", "comment": "파리미터3"},
+            {"name": "p4", "type": "STRING", "comment": "파리미터4"},
+            {"name": "date_cd", "type": "STRING"}
+        ],
+        "partitions": ["date_cd"]
+    }
+]

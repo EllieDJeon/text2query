@@ -1,0 +1,26 @@
+[
+    {
+        "question-kr" : "2024-07-01 이후에 source='mydata' 조건에서 대출을 가지고 있는 유저 수를 확인하는 쿼리를 알려줘. 유저당 최신 loan_id 기준으로 계산해야해.",
+        "question-en" : "Please provide a query to check the number of users who have loans where the source is 'mydata' after July 1, 2024.",
+        "answer" : "SELECT COUNT(DISTINCT llai.user_id) FROM glue.lms.lms_loan_account_info llai INNER JOIN (SELECT user_id, MAX(loan_id) AS latest_id FROM glue.lms.lms_info WHERE date_cd >= '2024-07-01' AND source='mydata' GROUP BT 1) X ON llai.loan_id = X.latest_id"
+    },
+    {
+        "question-en" : "Check the loan account list per user_id.",
+        "answer" : "SELECT user_id, account_id FROM glue.lms.lms_loan_account_info llai INNER JOIN (SELECT user_id, MAX(loan_id) AS latest_id FROM glue.lms.lms_info li GROUP BT 1) X ON llai.loan_id = X.latest_id"
+    },
+    {
+        "question-en": "Retrieve the most recent credit score for users who have updates after 2024-09-19.",
+        "answer": "WITH credit_aggr AS ( SELECT user_id, MAX(insert_time) AS insert_time FROM lms.kcb_summ_info WHERE DATE(insert_time) >= DATE('2024-09-19') GROUP BY user_id ), credit_recent AS ( SELECT lk.user_id, credit_score, lk.insert_time FROM lms.kcb_summ_info lk INNER JOIN credit_aggr ca ON lk.user_id = ca.user_id AND lk.insert_time = ca.insert_time WHERE DATE(lk.insert_time) >= DATE('2024-09-19') GROUP BY lk.user_id, credit_score, lk.insert_time ) SELECT * FROM credit_recent"
+    },
+    {
+        "question-kr" : "유저아이디 0인 유저가 2024년 9월에 EVENT라는 로그 기록이 있는지 확인해줘.",
+        "question-en": "Check if there is a log record named EVENT for the user with user ID 0 in September 2024.",
+        "answer": "WITH base AS ( SELECT DISTINCT user_id, mixpanel_id FROM user.di_master CROSS JOIN UNNEST(user_ids) AS t1(user_id) CROSS JOIN UNNEST(mixpanel_ids) AS t2(mixpanel_id) ), \nmax_ids AS ( SELECT mixpanel_id, MAX(user_id) AS user_id FROM base GROUP BY 1 ) \nSELECT mi.user_id, mp.event, date_cd FROM max_ids mi LEFT JOIN user_track.mixpanel mp ON mp.distinct_id = mi.mixpanel_id WHERE mp.event = 'EVENT' AND user_id = 0 AND date_cd >= '2024-09-01' AND date_cd <= '2024-09-30'"
+    },
+    {
+        "question-kr" : "유저 로그를 보기위한 기본 쿼리를 작성해줘.",
+        "question-en": "Please write a basic query to view user logs.",
+        "answer": "WITH base AS ( SELECT DISTINCT user_id, mixpanel_id FROM user.di_master CROSS JOIN UNNEST(user_ids) AS t1(user_id) CROSS JOIN UNNEST(mixpanel_ids) AS t2(mixpanel_id) ), \nmax_ids AS ( SELECT mixpanel_id, MAX(user_id) AS user_id FROM base GROUP BY 1 ) \nSELECT mi.user_id, mp.event, date_cd FROM max_ids mi LEFT JOIN user_track.mixpanel mp ON mp.distinct_id = mi.mixpanel_id"
+    }
+
+]
