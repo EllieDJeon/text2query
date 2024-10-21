@@ -1,6 +1,6 @@
-import yaml
 from datetime import datetime
 
+import yaml
 import boto3
 import openai
 
@@ -89,6 +89,8 @@ if __name__ == "__main__":
     # question = "Check the number of loan accounts per user based on mydata after August 1, 2024."
     # question = "유저별 최신 신용점수를 알고 싶어"
     # question = "유저아이디 1903978가 2024년 8월에 LM_schedule_view로그가 있는지 알려줘. mixpanel_id로 확인해줘"
-    question = "check if there is user logs record named LM_schedule_view for the user with user ID 1903978 in 2024/08."
+    # question = "check if there is user logs record named LM_schedule_view for the user with user ID 1903978 in 2024/08."
+    # question = "마수동 알람 설정한 유저 중에 유저 최신 신용점수를 알고 싶어"
+    question = "유저 아이디 3324539인 유저가 mixpanel에 LM_schedule_view 이벤트 로그가 없어. appsflyer에 로그가 있는지 확인해줘. "
     sql_query = sql_generator.main(question)
     print(f"""Generated SQL Query:\n{sql_query}""")

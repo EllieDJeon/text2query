@@ -9,6 +9,7 @@
         "answer" : "SELECT user_id, account_id FROM glue.lms.lms_loan_account_info llai INNER JOIN (SELECT user_id, MAX(loan_id) AS latest_id FROM glue.lms.lms_info li GROUP BT 1) X ON llai.loan_id = X.latest_id"
     },
     {
+        "question-kr" : "유저 최신 신용 점수",
         "question-en": "Retrieve the most recent credit score for users who have updates after 2024-09-19.",
         "answer": "WITH credit_aggr AS ( SELECT user_id, MAX(insert_time) AS insert_time FROM lms.kcb_summ_info WHERE DATE(insert_time) >= DATE('2024-09-19') GROUP BY user_id ), credit_recent AS ( SELECT lk.user_id, credit_score, lk.insert_time FROM lms.kcb_summ_info lk INNER JOIN credit_aggr ca ON lk.user_id = ca.user_id AND lk.insert_time = ca.insert_time WHERE DATE(lk.insert_time) >= DATE('2024-09-19') GROUP BY lk.user_id, credit_score, lk.insert_time ) SELECT * FROM credit_recent"
     },
@@ -18,9 +19,29 @@
         "answer": "WITH base AS ( SELECT DISTINCT user_id, mixpanel_id FROM user.di_master CROSS JOIN UNNEST(user_ids) AS t1(user_id) CROSS JOIN UNNEST(mixpanel_ids) AS t2(mixpanel_id) ), \nmax_ids AS ( SELECT mixpanel_id, MAX(user_id) AS user_id FROM base GROUP BY 1 ) \nSELECT mi.user_id, mp.event, date_cd FROM max_ids mi LEFT JOIN user_track.mixpanel mp ON mp.distinct_id = mi.mixpanel_id WHERE mp.event = 'EVENT' AND user_id = 0 AND date_cd >= '2024-09-01' AND date_cd <= '2024-09-30'"
     },
     {
-        "question-kr" : "유저 로그를 보기위한 기본 쿼리를 작성해줘.",
+        "question-kr" : "유저 로그 기본 쿼리 mixpanel 기준.",
         "question-en": "Please write a basic query to view user logs.",
         "answer": "WITH base AS ( SELECT DISTINCT user_id, mixpanel_id FROM user.di_master CROSS JOIN UNNEST(user_ids) AS t1(user_id) CROSS JOIN UNNEST(mixpanel_ids) AS t2(mixpanel_id) ), \nmax_ids AS ( SELECT mixpanel_id, MAX(user_id) AS user_id FROM base GROUP BY 1 ) \nSELECT mi.user_id, mp.event, date_cd FROM max_ids mi LEFT JOIN user_track.mixpanel mp ON mp.distinct_id = mi.mixpanel_id"
+    },
+    {
+        "question-kr" : "알림 설정 유저 - 마수동",
+        "question-en": "Users with notification settings",
+        "answer": "SELECT u.id AS user_id FROM fcsdb.user3 u INNER JOIN fcsdb.user_alarm_setting al ON u.id = al.user_id WHERE u.status = 'enabled' AND u.user_device_id IS NOT NULL AND al.alarm_id = 1 AND al.alarm_enabled = 1"
+    },
+    {
+        "question-kr" : "알림 설정 유저 - 상환알림",
+        "question-en": "Users with notification settings",
+        "answer": "SELECT u.id AS user_id FROM fcsdb.user3 u INNER JOIN fcsdb.user_alarm_setting al ON u.id = al.user_id WHERE u.status = 'enabled' AND u.user_device_id IS NOT NULL AND al.alarm_id = 2 AND al.alarm_enabled = 1"
+    },
+    {
+        "question-kr" : "알림 설정 유저 - 기기알림",
+        "question-en": "Users with notification settings",
+        "answer": "SELECT u.id AS user_id FROM fcsdb.user3 u INNER JOIN fcsdb.user_alarm_setting al ON u.id = al.user_id WHERE u.status = 'enabled' AND u.user_device_id IS NOT NULL AND al.noti_enabled = 1"
+    },
+    {
+        "question-kr" : "mixpanel 로그 없는 경우 appsflyer에서 유저아이디 1903978에 대해 2024-08-01 ~ 2024-09-31 사이에 로그가 있는지 확인",
+        "question-en": "Check if there are any logs for user ID 1903978 in Appsflyer between August 1, 2024, and September 31, 2024, in case there are no Mixpanel logs.",
+        "answer": "WITH base AS (SELECT DISTINCT user_id, appsflyer_id FROM user.di_master CROSS JOIN UNNEST(user_ids) AS t1(user_id) CROSS JOIN UNNEST(appsflyer_ids) AS t2(appsflyer_id)), max_ids AS (SELECT appsflyer_id, MAX(user_id) AS user_id FROM base GROUP BY 1) SELECT user_id, event_name, date_cd, count(*) AS log_count FROM user_track.appsflyer a INNER JOIN max_ids m ON a.appsflyer_id = m.appsflyer_id AND m.user_id = 1903978 AND a.date_cd >= '2024-08-01' AND a.date_cd <= '2024-09-31' WHERE event_name = 'LM_schedule_view' GROUP BY 1, 2, 3 ORDER BY 1, 3 desc"
     }
 
 ]
