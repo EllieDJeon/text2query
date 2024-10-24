@@ -1,4 +1,6 @@
 .venv
+volumes/
 *.txt
 **/__pycache__/
 .Python
+.DS_Store
